@@ -1,5 +1,7 @@
 #include "path.h"
 
+#include "line.h"
+
 Path::Path() : _size(1), _count(0) 
 {
     _points = new Point*[1];
@@ -26,6 +28,12 @@ void Path::append(Point *point)
     insert(point);
 }
 
+void Path::append(Point **points, size_t count)
+{
+    for (size_t i = 0; i < count; i++)
+        insert(points[i]);
+}
+
 // returns nullptr on bad index
 Point *Path::operator[](const size_t index)
 {
@@ -48,6 +56,16 @@ Point *Path::last() const
 {
     if (_count == 0) return nullptr;
     return _points[_count - 1];
+}
+
+double Path::length() const
+{
+    double len = 0;
+    for (size_t i = 0; i < _count - 1; i++)
+    {
+        len += Line(_points[i], _points[i + 1]).length();
+    }
+    return len;
 }
 
 std::wstring Path::print() const

@@ -6,17 +6,18 @@
 
 enum class Task
 { 
-    Point, Line, Path, CreatePoint, CreateLine, LineLength, EXIT, ERR_TASK
+    Point, Line, LineLength, Path, CreatePoint, CreateLine, PathLength, EXIT, ERR_TASK
 };
 
 std::map<Task, std::wstring> texts 
 {
     { Task::Point, L"1\tТочка координат" },
     { Task::Line, L"2\tПрямая" },
+    { Task::LineLength, L"2.1\tДлина линии" },
     { Task::Path, L"3\tЛоманая" },
     { Task::CreatePoint, L"4.1\tСоздаём точку" },
     { Task::CreateLine, L"4.2\tСоздаём линию" },
-    { Task::LineLength, L"5\tДлина линии" }
+    { Task::PathLength, L"5\tДлина ломаной" }
 };
 
 Task selectTask(const std::wstring selection)
@@ -64,6 +65,9 @@ void runDemo(Task task)
         break;
     case Task::LineLength: 
         demos::lineLengthDemo();
+        break;
+    case Task::PathLength:
+        demos::pathLengthDemo();
         break;
     default: 
         return;

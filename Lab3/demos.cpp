@@ -117,3 +117,19 @@ void demos::lineLengthDemo()
     std::wcout << L"Длина линии: " << line.length() << std::endl;
     std::wcout << L"Целая часть длины линии: " << line.truncatedLength() << std::endl;
 }
+
+void demos::pathLengthDemo()
+{
+    Point* firstPoints[] = { new Point{1, 5}, new Point{2, 8}, new Point{5, 3} };
+    Path path(firstPoints, 3);
+    std::wcout << L"Ломаная до добавления точек: " << path.print() 
+        << L"\nДлина: " << std::to_wstring(path.length()) << L"\n";
+
+    Point* lastPoints[] = { new Point{5, 15}, new Point{8, 10} };
+    path.append(lastPoints, 2);
+    std::wcout << L"Ломаная после добавления точек: " << path.print() 
+        << L"\nДлина: " << std::to_wstring(path.length()) << L"\n";
+
+    for (size_t i = 0; i < 3; i++) delete firstPoints[i];
+    for (size_t i = 0; i < 2; i++) delete lastPoints[i];
+}

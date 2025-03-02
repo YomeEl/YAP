@@ -4,7 +4,7 @@
 #include <string>
 #include "point.h"
 
-// Does't take ownership
+// Doesn't take ownership
 class Path
 {
 public:
@@ -14,12 +14,15 @@ public:
     ~Path();
     
     void append(Point *point);
+    void append(Point **points, size_t count);
     
     Point* operator[](const size_t index);
     size_t count() const;
 
     Point* first() const;
     Point* last() const;
+
+    double length() const;
 
     std::wstring print() const;
 

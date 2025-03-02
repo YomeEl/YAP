@@ -9,6 +9,7 @@ namespace demos
     void createPointDemo();
     void createLineDemo();
     void lineLengthDemo();
+    void pathLengthDemo();
 }
 
 #endif // !DEMOS_H
