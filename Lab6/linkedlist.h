@@ -34,17 +34,16 @@ public:
     LinkedListItem<T>* first() const { return _root; }
     LinkedListItem<T>* last() const { return _last; }
 
-    LinkedListItem<T>* append(const T &value)
+    void append(const T &value)
     {
         LinkedListItem<T> *item = new LinkedListItem<T> { value, nullptr, nullptr };
-        if (!_last) { _root = item; _last = item; return item; }
+        if (!_last) { _root = item; _last = item; }
         else 
         { 
             _last->next = item; 
             item->prev = _last;
             _last = item; 
         }
-        return item;
     }
     void remove(const T &value)
     {
@@ -54,15 +53,7 @@ public:
             LinkedListItem<T> *next = cur->next;
             if (cur->value == value) remove(cur); 
             cur = next;
-        }
-    }
-    void remove(const LinkedListItem<T> * const item)
-    {
-        LinkedListItem<T> *cur = _root;
-        while (cur) 
-        {
-            if (cur == item) remove(cur);
-            cur = cur->next;
+            if (cur == _root) break;
         }
     }
 
@@ -73,6 +64,7 @@ public:
         {
             if (cur->value == value) return cur;
             cur = cur->next;
+            if (cur == _root) break;
         }
         return nullptr;
     }
