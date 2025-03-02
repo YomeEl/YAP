@@ -34,7 +34,7 @@ void printIntArr(int arr[], int len)
 // Добавил аргументы arrLen, insLen -- длины массивов
 int* add(int arr[], int arrLen, int ins[], int insLen, int pos)
 {
-    if (pos < 0 || pos >= arrLen)
+    if (pos < 0 || pos > arrLen)
     {
         std::cout << "Wrong pos!";
         return nullptr;

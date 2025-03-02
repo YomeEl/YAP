@@ -28,6 +28,7 @@ bool readIntArr(int res[], int n)
 
 void printIntArr(int arr[], int len)
 {
+    if (len == 0) std::cout << "empty array";
     for (int i = 0; i < len; i++) std::cout << arr[i] << " ";
 }
 

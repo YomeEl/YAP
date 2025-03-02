@@ -18,12 +18,13 @@ bool readLong(long &res)
 
 int numLen(long x)
 {
-    int len = 0;
-    while (x > 0)
+    int len = x < 0;
+    x = x > 0 ? x : -x;
+    do
     {
         len++;
         x /= 10;
-    }
+    } while (x > 0);
     return len;
 }
 

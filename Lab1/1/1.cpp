@@ -19,6 +19,7 @@ bool readDouble(double &res)
 
 double fraction(double x)
 {
+    x = abs(x);
     return x - trunc(x);
 }
 
