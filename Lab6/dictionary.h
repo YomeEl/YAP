@@ -23,7 +23,7 @@ public:
     }
     void remove(const K& key) { _arr[pos(key)].valid = false; _count--; }
     V& at(const K& key) { return _arr[pos(key)].value; }
-    void exists(const K& key) { return _arr[pos(key)].valid; }
+    bool exists(const K& key) { return _arr[pos(key)].valid; }
     V& operator[](const K& key) { return at(key); }
     pair* pairs() const
     {
