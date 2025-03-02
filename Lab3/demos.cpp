@@ -102,29 +102,7 @@ void demos::createLineDemo()
     Line line2(5, 10, 25, 10);
     Line line3(line1.from(), line2.to());
 
-    std::wcout << L"Начальное состояние линий" << std::endl;
-
-    std::wcout 
-        << L"\t1: " << line1.print() 
-        << L"\n\t2: " << line2.print() 
-        << L"\n\t3: " << line3.print() << std::endl;
-
-    std::wcout << L"Сдвигаем начало первой линии в точку (2, 4)" << std::endl;
-    line1.from()->setX(2);
-    line1.from()->setY(4);
-
-    std::wcout << L"Сдвигаем конец второй линии в точку (30, 15)" << std::endl;
-    line2.to()->setX(30);
-    line2.to()->setY(15);
-
-    std::wcout 
-        << L"\t1: " << line1.print() 
-        << L"\n\t2: " << line2.print() 
-        << L"\n\t3: " << line3.print() << std::endl;
-
-    std::wcout << L"Сдвигаем конец первой линии в точку (5, 5)" << std::endl;
-    line1.to()->setX(5);
-    line1.to()->setY(5);
+    std::wcout << L"Линии" << std::endl;
 
     std::wcout 
         << L"\t1: " << line1.print() 
