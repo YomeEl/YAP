@@ -1,6 +1,7 @@
 #include "demos.h"
 
 #include "point.h"
+#include "pointless.h"
 #include "line.h"
 #include "path.h"
 
@@ -87,11 +88,11 @@ void demos::pathDemo()
 
 void demos::createPointDemo()
 {
-    Point a(3, 5);
+    PointLess a(3, 5);
     std::wcout << a.print() << std::endl;
-    Point b(25, 6);
+    PointLess b(25, 6);
     std::wcout << b.print() << std::endl;
-    Point c(7, 8);
+    PointLess c(7, 8);
     std::wcout << c.print() << std::endl;
 }
 
