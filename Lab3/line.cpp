@@ -28,11 +28,13 @@ Point* Line::to() const
 
 void Line::setFrom(Point* from)
 {
+    if (_ownsFrom) delete _from;
     _from = from;
 }
 
 void Line::setTo(Point* to)
 {
+    if (_ownsTo) delete _to;
     _to = to;
 }
 
