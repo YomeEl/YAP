@@ -124,7 +124,7 @@ void demos::hashSet2Demo()
     HashSet letters(lettersArr, 10);
 
     auto intersection = letters.Intersect(textLetters);
-    std::wcout << L"Буквы, входящие хотя бы в одно слово в файле ";
+    std::wcout << L"Звонкие согласные, входящие хотя бы в одно слово в файле ";
     std::cout << filename << ":\n\t";
     print_set(intersection, L", ", std::wstring(L"") + IDENT);
     std::cout << std::endl;
@@ -153,11 +153,25 @@ void demos::dictionaryDemo()
         usernames.append(fullName, username);
     }
 
-    std::wcout << L"Имя\tЛогин\n";
     auto pairs = usernames.pairs();
+
+    size_t maxKeyLength = 0;
     for (size_t i = 0; i < usernames.count(); i++)
     {
-        std::wcout << pairs[i].key << L"\t" << pairs[i].value << std::endl;
+        size_t keyLength = pairs[i].key.length();
+        maxKeyLength = keyLength > maxKeyLength ? keyLength : maxKeyLength;
+    }
+
+    std::wcout << L"Имя";
+    for (size_t j = 0; j < maxKeyLength - 3 + 1; j++) std::wcout << L" ";
+    std::wcout << L"| Логин\n";
+    for (size_t i = 0; i < usernames.count(); i++)
+    {
+        std::wcout << pairs[i].key;
+        size_t keyLength = pairs[i].key.length();
+        for (size_t j = 0; j < maxKeyLength - keyLength + 1; j++) std::wcout << L" ";
+        std::wcout << L"| " << pairs[i].value << std::endl;
+
     }
     delete[] pairs;
 }
