@@ -33,12 +33,11 @@ public:
     ListItem<T>* first() const { return _root; }
     ListItem<T>* last() const { return _last; }
 
-    ListItem<T>* append(const T &value)
+    void append(const T &value)
     {
         ListItem<T> *item = new ListItem<T> { value, nullptr };
-        if (!_last) { _root = item; _last = item; return item; }
+        if (!_last) { _root = item; _last = item; }
         else { _last->next = item; _last = item; }
-        return item;
     }
     void remove(const T &value)
     {
@@ -47,15 +46,7 @@ public:
         {
             if (cur->value == value) remove(prev, cur);
             prev = cur; cur = cur->next;
-        }
-    }
-    void remove(const ListItem<T> * const item)
-    {
-        ListItem<T> *cur = _root, *prev = nullptr;
-        while (cur) 
-        {
-            if (cur == item) remove(prev, cur);
-            prev = cur; cur = cur->next;
+            if (cur == _root) break;
         }
     }
 
@@ -66,6 +57,7 @@ public:
         {
             if (cur->value == value) return cur;
             cur = cur->next;
+            if (cur == _root) break;
         }
         return nullptr;
     }
