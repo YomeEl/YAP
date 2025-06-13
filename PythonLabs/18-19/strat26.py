@@ -4,10 +4,13 @@
 
 from enum import Enum
 
+
 class LettersGame:
     """Letters game logic."""
+
     class InputProcessingResult(Enum):
         """Input processing result enum."""
+
         OK = 1
         INVALID_LETTER = 2
         NON_EXISTING_LETTER = 3
@@ -17,33 +20,33 @@ class LettersGame:
     def __init__(self):
         self.is_first_player = True
         self.letters = []
-        for i in range(ord('а'), ord('е') + 1):
+        for i in range(ord("а"), ord("е") + 1):
             self.letters.append(chr(i))
-        self.letters.append('ё')
-        for i in range(ord('ж'), ord('я') + 1):
+        self.letters.append("ё")
+        for i in range(ord("ж"), ord("я") + 1):
             self.letters.append(chr(i))
-        for i in range(ord('a'), ord('z') + 1):
+        for i in range(ord("a"), ord("z") + 1):
             self.letters.append(chr(i))
 
     def is_valid_letter(self, letter):
         """returns True if provided letter is valid, otherwise False"""
-        is_cyrillic = ord(letter) in range(ord('а'), ord('я') + 1) or letter == 'ё'
-        is_latin = ord(letter) in range(ord('a'), ord('z') + 1)
+        is_cyrillic = ord(letter) in range(ord("а"), ord("я") + 1) or letter == "ё"
+        is_latin = ord(letter) in range(ord("a"), ord("z") + 1)
         return is_cyrillic or is_latin
 
     def print_letters(self):
         """Prints unused letters to stdout."""
-        print(' '.join(self.letters))
+        print(" ".join(self.letters))
 
     def process_input(self, input_string):
         """Checks input_string and returns tuple of InputProcessingResult enum and result.
         Result is list of letters if all checks passed, problematic letter if letter is invalid
         or not present and empty if count of letters is invalid."""
-        letters = input_string.split(' ')
+        letters = input_string.split(" ")
         valid_counts = [1, 2, 4, 5]
         if not len(letters) in valid_counts:
             return self.InputProcessingResult.INVALID_COUNT, ""
-        
+
         for letter in letters:
             if not len(letter) == 1 or not self.is_valid_letter(letter):
                 return self.InputProcessingResult.INVALID_LETTER, letter
@@ -51,9 +54,9 @@ class LettersGame:
                 return self.InputProcessingResult.NON_EXISTING_LETTER, letter
             if letters.count(letter) > 1:
                 return self.InputProcessingResult.NOT_UNIQUE_LETTER, letter
-            
+
         return self.InputProcessingResult.OK, letters
-        
+
     def print_error(self, error, result):
         """Prints details of the given error using result."""
         match error:
@@ -73,10 +76,12 @@ class LettersGame:
         while True:
             print("Буквы на доске: ")
             self.print_letters()
-            promt = "Ведите через пробел одну, две, четыре " \
-            "или пять букв, которые хотите зачеркунть: "
+            promt = (
+                "Ведите через пробел одну, две, четыре "
+                "или пять букв, которые хотите зачеркунть: "
+            )
             error, letters = self.process_input(input(promt))
-            if (error == self.InputProcessingResult.OK):
+            if error == self.InputProcessingResult.OK:
                 return letters
             self.print_error(error, letters)
 
@@ -93,6 +98,7 @@ class LettersGame:
         self.remove_letters(letters)
         self.is_first_player = not self.is_first_player
         return len(self.letters) not in [0, 3]
+
 
 if __name__ == "__main__":
     game = LettersGame()
