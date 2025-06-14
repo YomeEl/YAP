@@ -9,29 +9,6 @@ class Board:
         self.size = size
         self.arr = [True for _ in range(size * size)]
 
-    def __str__(self):
-        header = "  " + (
-            "\u0332 ".join(["\u0332" + str(i + 1) for i in range(self.size)])
-        )
-        lines = [
-            "|".join([str(i + 1)] + self.__get_str_line(i)) for i in range(self.size)
-        ]
-        return "\n".join([header] + lines)
-
-    def __index(self, x, y):
-        return y * self.size + x
-
-    def __get(self, x, y):
-        return self.arr[self.__index(x, y)]
-
-    def __set(self, x, y, value):
-        self.arr[self.__index(x, y)] = value
-
-    def __get_str_line(self, index):
-        return [
-            "\u0332" + ("o" if self.__get(i, index) else " ") for i in range(self.size)
-        ]
-
     def count_row(self, index):
         if index >= self.size:
             return -1
@@ -66,11 +43,50 @@ class Board:
                 return False
         return True
 
+    def __str__(self):
+        header = "  " + (
+            "\u0332 ".join(["\u0332" + str(i + 1) for i in range(self.size)])
+        )
+        lines = [
+            "|".join([str(i + 1)] + self.__get_str_line(i)) for i in range(self.size)
+        ]
+        return "\n".join([header] + lines)
+
+    def __index(self, x, y):
+        return y * self.size + x
+
+    def __get(self, x, y):
+        return self.arr[self.__index(x, y)]
+
+    def __set(self, x, y, value):
+        self.arr[self.__index(x, y)] = value
+
+    def __get_str_line(self, index):
+        return [
+            "\u0332" + ("o" if self.__get(i, index) else " ") for i in range(self.size)
+        ]
+
 
 class BoardGame:
     def __init__(self):
         self.board = Board(9)
         self.is_first_player = True
+
+    def make_move(self):
+        print("Текущее состояние доски:")
+        print(self.board)
+        print(f"Ход {"первого" if self.is_first_player else "второго"} игрока")
+        dir = self.__read_direction()
+        index = self.__read_index(dir)
+        if dir == "r":
+            self.board.remove_row(index)
+        else:
+            self.board.remove_column(index)
+        self.is_first_player = not self.is_first_player
+        return not self.board.is_empty()
+
+    def print_result(self):
+        print(f"{"Второй" if game.is_first_player else "Первый"} игрок победил!")
 
     def __read_direction(self):
         while True:
@@ -105,23 +121,9 @@ class BoardGame:
 
             return index
 
-    def make_move(self):
-        print("Текущее состояние доски:")
-        print(self.board)
-        print(f"Ход {"первого" if self.is_first_player else "второго"} игрока")
-        dir = self.__read_direction()
-        index = self.__read_index(dir)
-        if dir == "r":
-            self.board.remove_row(index)
-        else:
-            self.board.remove_column(index)
-        self.is_first_player = not self.is_first_player
-        return not self.board.is_empty()
-
 
 if __name__ == "__main__":
     game = BoardGame()
     while game.make_move():
         continue
-
-    print(f"{"Второй" if game.is_first_player else "Первый"} игрок победил!")
+    game.print_result()

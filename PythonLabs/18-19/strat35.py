@@ -17,40 +17,40 @@ class TwosPowerGame:
         self.used_numbers = [2]
         self.is_first_player = True
 
-    def find_digit(self, digit):
+    def make_move(self):
+        """Plays one move of the game and returns True if winner was not determined.
+        Otherwise returns False."""
+        print(f"Ход {"первого" if self.is_first_player else "второго"} игрока")
+        print("Числа на доске: " + " ".join(map(str, self.used_numbers)))
+        number = self.__input_power_of_two()
+        self.is_first_player = not self.is_first_player
+        return self.__use_number(number)
+
+    def print_result(self):
+        print(f"{"Второй" if game.is_first_player else "Первый"} игрок победил!")
+
+    def __find_digit(self, digit):
         """Returns True if given digit is present in used_digits, False otherwise."""
         return self.used_digits.count(digit) > 0
 
-    def use_number(self, number):
+    def __use_number(self, number):
         """Returns True if every digit in the given number is not present in used_digits
         and appends these digits to used_numbers.
         If any of the digits are already present, returns False."""
         for digit in Helpers.get_digits(number):
-            if self.find_digit(digit):
+            if self.__find_digit(digit):
                 return False
             self.used_digits.append(digit)
         self.used_numbers.append(number)
         return True
 
-    def input_power_of_two(self):
+    def __input_power_of_two(self):
         """Repeatedly asks user to input a power of two and returns this number."""
         promt = "Введите число: "
         error_message = "Это не степень двойки!"
         return Helpers.input_with_condition(
             promt, error_message, int, Helpers.is_power_of_two
         )
-
-    def make_move(self):
-        """Plays one move of the game and returns True if winner was not determined.
-        Otherwise returns False."""
-        print(f"Ход {"первого" if self.is_first_player else "второго"} игрока")
-        print("Числа на доске: " + " ".join(map(str, self.used_numbers)))
-        number = self.input_power_of_two()
-        self.is_first_player = not self.is_first_player
-        return self.use_number(number)
-
-    def print_result(self):
-        print(f"{"Второй" if game.is_first_player else "Первый"} игрок победил!")
 
 
 class BotDiffuculty(IntEnum):
@@ -65,14 +65,6 @@ class TwosPowerGameSingle(TwosPowerGame):
         self.is_player_first = is_player_first
         self.difficulty = difficulty
 
-    def select_number(self):
-        number = 0
-        for _ in range(int(self.difficulty)):
-            number = 2 ** randint(1, 31)
-            if not Helpers.intersects(Helpers.get_digits(number), self.used_digits):
-                return number
-        return number
-
     def make_move(self):
         """Plays one move of the game and returns True if winner was not determined.
         Otherwise returns False."""
@@ -81,20 +73,28 @@ class TwosPowerGameSingle(TwosPowerGame):
         number = 0
         if self.is_first_player == self.is_player_first:
             print("Ваш ход")
-            number = self.input_power_of_two()
+            number = self.__input_power_of_two()
         else:
             print("Ход бота")
-            number = self.select_number()
+            number = self.__select_number()
             print(f"Бот пишет {number}")
 
         self.is_first_player = not self.is_first_player
-        return self.use_number(number)
+        return self.__use_number(number)
 
     def print_result(self):
         if self.is_first_player == self.is_player_first:
             print("Вы победили!")
         else:
             print("Вы проиграли!")
+
+    def __select_number(self):
+        number = 0
+        for _ in range(int(self.difficulty)):
+            number = 2 ** randint(1, 31)
+            if not Helpers.intersects(Helpers.get_digits(number), self.used_digits):
+                return number
+        return number
 
 
 if __name__ == "__main__":
