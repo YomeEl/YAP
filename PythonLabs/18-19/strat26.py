@@ -3,7 +3,9 @@
 или 4, или 5 букв. Тот, кто не сможет сделать ход, проигрывает."""
 
 from enum import Enum
+from random import randint
 
+from helpers import Helpers
 
 class LettersGame:
     """Letters game logic."""
@@ -74,8 +76,6 @@ class LettersGame:
     def request_letters(self):
         """Repeatedly asks user to input valid number of valid letters. Returns these letters."""
         while True:
-            print("Буквы на доске: ")
-            self.print_letters()
             promt = (
                 "Ведите через пробел одну, две, четыре "
                 "или пять букв, которые хотите зачеркунть: "
@@ -94,15 +94,85 @@ class LettersGame:
         """Prints whose move it is, requests letters to remove and removes them.
         Returns true if next move is possible and False otherwise."""
         print(f"Ход {"первого" if self.is_first_player else "второго"} игрока")
+        print("Буквы на доске:")
+        self.print_letters()
         letters = self.request_letters()
         self.remove_letters(letters)
         self.is_first_player = not self.is_first_player
         return len(self.letters) not in [0, 3]
+    
+    def print_result(self):
+        if len(self.letters) > 0:
+            print("Буквы на доске: ")
+            self.print_letters()
+            
+        print(f"{"Первый" if self.is_first_player else "Второй"} игрок победил!")
 
+class LettersGameSingle(LettersGame):
+    def __init__(self, is_player_first):
+        LettersGame.__init__(self)
+        self.is_player_first = is_player_first
+
+    def select_count_to_remove(self):
+        letters_count = len(self.letters)
+        if letters_count == 3:
+            return 2
+        special_counts = [1, 2, 4, 5]
+        if letters_count in special_counts:
+            return letters_count
+        
+        if letters_count - 3 in special_counts:
+            return letters_count - 3
+        
+        return special_counts[randint(0, 3)]
+
+    def select_letters_to_remove(self):
+        count = self.select_count_to_remove()
+        return self.letters[:count]
+
+    def make_move(self):
+        """Prints whose move it is, requests letters to remove and removes them.
+        Returns true if next move is possible and False otherwise."""
+
+        print("Буквы на доске: ")
+        self.print_letters()
+
+        letters = []
+        if self.is_first_player == self.is_player_first:
+            print("Ваш ход")
+            letters = self.request_letters()
+        else:
+            print("Ход бота")
+            letters = self.select_letters_to_remove()
+            print(f"Бот вычёркивает {", ".join(letters)}")
+            
+        self.remove_letters(letters)
+        self.is_first_player = not self.is_first_player
+        return len(self.letters) not in [0, 3]
+
+    def print_result(self):
+        if len(self.letters) > 0:
+            print("Буквы на доске: ")
+            self.print_letters()
+
+        if self.is_first_player == self.is_player_first:
+            print("Вы проиграли!")
+        else:
+            print("Вы победили!")
 
 if __name__ == "__main__":
-    game = LettersGame()
+    player_variants = [("Один", True), ("Два", False)]
+    first_move_variants = [("Игрок", True), ("Бот", False)]
+
+    is_single = Helpers.input_select("Выберите количество игроков:", player_variants)
+    if is_single:
+        is_player_first = Helpers.input_select("Кто ходит первым?", first_move_variants)
+
+    game = (
+        LettersGameSingle(is_player_first)
+        if is_single
+        else LettersGame()
+    )
     while game.make_move():
         continue
-
-    print(f"{"Первый" if game.is_first_player else "Второй"} игрок победил!")
+    game.print_result()
