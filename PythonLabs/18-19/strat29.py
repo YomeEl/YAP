@@ -3,6 +3,8 @@
 снять оттуда все оставшиеся фишки. Выигрывает игрок, после хода которого доска опустеет.
 """
 
+from helpers import Helpers
+
 
 class Board:
     def __init__(self, size):
@@ -43,6 +45,24 @@ class Board:
                 return False
         return True
 
+    def copy(self):
+        board = Board(self.size)
+        board.arr = self.arr[:]
+        return board
+
+    def count_not_empty_rows(self):
+        return self.__count_not_empty(self.count_row)
+
+    def count_not_empty_columns(self):
+        return self.__count_not_empty(self.count_column)
+
+    def __count_not_empty(self, counter):
+        count = 0
+        for i in range(self.size):
+            if counter(i) > 0:
+                count = count + 1
+        return count
+
     def __str__(self):
         header = "  " + (
             "\u0332 ".join(["\u0332" + str(i + 1) for i in range(self.size)])
@@ -76,8 +96,8 @@ class BoardGame:
         print("Текущее состояние доски:")
         print(self.board)
         print(f"Ход {"первого" if self.is_first_player else "второго"} игрока")
-        dir = self.__read_direction()
-        index = self.__read_index(dir)
+        dir = self._read_direction()
+        index = self._read_index(dir)
         if dir == "r":
             self.board.remove_row(index)
         else:
@@ -88,7 +108,7 @@ class BoardGame:
     def print_result(self):
         print(f"{"Второй" if game.is_first_player else "Первый"} игрок победил!")
 
-    def __read_direction(self):
+    def _read_direction(self):
         while True:
             dir = input(
                 "Введите r, чтобы выбрать строку или c, чтобы выбрать столбец: "
@@ -97,7 +117,7 @@ class BoardGame:
                 return dir
             print("Не удалось распознать направление!")
 
-    def __read_index(self, direction):
+    def _read_index(self, direction):
         while True:
             is_row = direction == "r"
             promt = f"Введите номер {"строки" if is_row else "стоблца"}: "
@@ -122,8 +142,103 @@ class BoardGame:
             return index
 
 
+class BoardGameSingle(BoardGame):
+    def __init__(self, is_player_first):
+        BoardGame.__init__(self)
+        self.is_player_first = is_player_first
+
+    def __is_board_winnable(self, board: Board):
+        if board.is_empty():
+            return True
+        if board.count_not_empty_rows() % 2 == 0:
+            return True
+        if board.count_not_empty_columns() % 2 == 0:
+            return True
+        return False
+
+    def __is_board_losable(self, board: Board):
+        if board.count_not_empty_rows() == 1:
+            return True
+        if board.count_not_empty_columns() == 1:
+            return True
+
+    def __analyze(self, get_board):
+        last_non_losable_candidate = None
+        last_candidate = None
+        for i in range(self.board.size):
+            copy = get_board(i)
+            if copy is None:
+                continue
+            last_candidate = i
+            if self.__is_board_winnable(copy):
+                return (last_candidate, last_candidate)
+            if not self.__is_board_losable(copy):
+                last_non_losable_candidate = last_candidate
+        return (last_candidate, last_non_losable_candidate)
+
+    def __find_move(self):
+        def row_getter(i):
+            if self.board.count_row(i) == 0:
+                return None
+            copy = self.board.copy()
+            copy.remove_row(i)
+            return copy
+
+        def col_getter(i):
+            if self.board.count_column(i) == 0:
+                return None
+            copy = self.board.copy()
+            copy.remove_column(i)
+            return copy
+
+        row_result = self.__analyze(row_getter)
+        col_result = self.__analyze(col_getter)
+
+        if not row_result[1] is None:
+            return ("r", row_result[1])
+        if not col_result[1] is None:
+            return ("c", col_result[1])
+        if not row_result[0] is None:
+            return ("r", row_result[0])
+        return ("c", row_result[0])
+
+    def make_move(self):
+        print("Текущее состояние доски:")
+        print(self.board)
+        if self.is_first_player == self.is_player_first:
+            print("Ваш ход")
+            dir = self._read_direction()
+            index = self._read_index(dir)
+        else:
+            print("Ход бота")
+            dir, index = self.__find_move()
+            print(
+                f"Бот снимает фишки из {"строки" if dir == "r" else "столбца"} {index + 1}"
+            )
+
+        if dir == "r":
+            self.board.remove_row(index)
+        else:
+            self.board.remove_column(index)
+        self.is_first_player = not self.is_first_player
+        return not self.board.is_empty()
+
+    def print_result(self):
+        if self.is_first_player == self.is_player_first:
+            print("Вы проиграли!")
+        else:
+            print("Вы победили!")
+
+
 if __name__ == "__main__":
-    game = BoardGame()
+    player_variants = [("Один", True), ("Два", False)]
+    first_move_variants = [("Игрок", True), ("Бот", False)]
+
+    is_single = Helpers.input_select("Выберите количество игроков:", player_variants)
+    if is_single:
+        is_player_first = Helpers.input_select("Кто ходит первым?", first_move_variants)
+
+    game = BoardGameSingle(is_player_first) if is_single else BoardGame()
     while game.make_move():
         continue
     game.print_result()
