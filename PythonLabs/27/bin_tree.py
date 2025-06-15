@@ -35,14 +35,22 @@ class BinTree:
 
         free_node = self.root.right
         self.root.right = root_right
+        self.__insert_node(free_node)
+
+    def insert(self, value):
+        node = TreeNode(value)
+        if self.root is None:
+            self.root = node
+        else:
+            self.__insert_node(TreeNode(value))
+
+    def __insert_node(self, node):
         parent = None
         next_parent = self.root
         while next_parent:
             parent = next_parent
-            next_parent = (
-                parent.left if free_node.value <= parent.value else parent.right
-            )
-        if free_node.value <= parent.value:
-            parent.left = free_node
+            next_parent = parent.left if node.value <= parent.value else parent.right
+        if node.value <= parent.value:
+            parent.left = node
         else:
-            parent.right = free_node
+            parent.right = node
