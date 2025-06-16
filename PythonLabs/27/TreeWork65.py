@@ -4,16 +4,12 @@
 LL-поворот. Известно, что требуется не более одного такого поворота.
 Вывести корень полученного дерева."""
 
-# examples 
-#   (((2)5)10) -> ((2)5(10))
-#   ((((1)2)3)4(5(6))) -> (((1)2(3))4(5(6)))
-#   ((((1)2(3))4)5(6(7))) -> (((1)2((3)4))5(6(7)))
-
 from helpers import Helpers
 from TreeWork26 import BinTreeParser
 from bin_tree import print_tree
 
-def test(name, tree_string, expect):
+
+def test(tree_string, expect):
     print("====")
     print(f"INPUT\n\t{tree_string}")
 
@@ -31,9 +27,9 @@ def test(name, tree_string, expect):
 
 
 def run_test():
-    test("No left subtree", "(((2)5)10)", "((2)5(10))")
-    test("No right subtree", "((((1)2)3)4(5(6)))", "(((1)2(3))4(5(6)))")
-    test("No right subtree in left subtree", "((((1)2(3))4)5(6(7)))", "(((1)2((3)4))5(6(7)))")
+    test("(((2)5)10)", "((2)5(10))")
+    test("((((1)2)3)4(5(6)))", "(((1)2(3))4(5(6)))")
+    test("((((1)2(3))4)5(6(7)))", "(((1)2((3)4))5(6(7)))")
 
 
 def run_manual():

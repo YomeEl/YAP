@@ -9,21 +9,22 @@ class TreeNode:
         left = "" if not self.left else str(self.left)
         right = "" if not self.right else str(self.right)
         return f"({left}{self.value}{right})"
-    
+
     def update_height(self):
-        if self.left: 
+        if self.left:
             self.left.update_height()
             left_height = self.left.height
         else:
             left_height = 0
 
-        if self.right: 
+        if self.right:
             self.right.update_height()
             right_height = self.right.height
         else:
             right_height = 0
 
         self.height = 1 + max(left_height, right_height)
+
 
 class BinTree:
     def __init__(self):
@@ -60,7 +61,8 @@ class BinTree:
             self.__insert_node(TreeNode(value))
 
     def update_heights(self):
-        if self.root is None: return
+        if self.root is None:
+            return
         self.root.update_height()
 
     def balance(self):
@@ -68,8 +70,9 @@ class BinTree:
         self.__balance(self.root, None)
 
     def __rotate_ll(self, node, parent):
-        is_root = parent is None 
-        if not is_root: is_left = parent.left == node
+        is_root = parent is None
+        if not is_root:
+            is_left = parent.left == node
 
         lr = node.left.right
         new_root = node.left
@@ -84,16 +87,16 @@ class BinTree:
         else:
             parent.right = new_root
 
-
     def __balance(self, node, parent):
-        if node is None: return
+        if node is None:
+            return
         left_height = node.left.height if node.left else 0
         right_height = node.right.height if node.right else 0
         balance = left_height - right_height
         if balance > 1:
             self.__rotate_ll(node, parent)
             return
-        
+
         self.__balance(node.left, node)
         self.__balance(node.right, node)
 
@@ -106,7 +109,6 @@ class BinTree:
         left_result = self.__find_ll_imbalance(node, node.left)
         right_result = self.__find_ll_imbalance(node, node.right)
 
-
     def __insert_node(self, node):
         parent = None
         next_parent = self.root
@@ -118,20 +120,24 @@ class BinTree:
         else:
             parent.right = node
 
-def print_tree(tree: BinTree, prefix = ""):
+
+def print_tree(tree: BinTree, prefix=""):
     tree.update_heights()
     root = tree.root
     nodes = []
     __collect(root, 0, nodes)
-    
+
     lines = [[] for _ in range(root.height)]
     for node, level in nodes:
         for i, line in enumerate(lines):
             line.append(str(node) if i == level else " ")
     for line in lines:
-        print(prefix + " ".join(line)) 
+        print(prefix + " ".join(line))
+
 
 def __collect(node, level, acc):
-    if node.left: __collect(node.left, level + 1, acc)
+    if node.left:
+        __collect(node.left, level + 1, acc)
     acc.append((node.value, level))
-    if node.right: __collect(node.right, level + 1, acc)
+    if node.right:
+        __collect(node.right, level + 1, acc)
